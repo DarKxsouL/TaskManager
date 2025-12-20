@@ -6,7 +6,6 @@ import LayoutSkeleton from './components/LayoutSkeleton'
 import SocketManager from './components/SocketManager'
 
 //lazy load components
-const Landing =  lazy(() => import('./pages/Landing'))
 const Login =  lazy(() => import('./pages/Login'))
 const Navbar =  lazy(() => import('./components/Navbar'))
 const Header =  lazy(() => import('./components/Header'))
@@ -48,8 +47,7 @@ function App() {
     />
     <SocketManager />
     <Routes>
-      <Route path='/' element={<Landing/>} />
-      <Route path='/login' element={<Login/>} />
+      <Route path='/' element={<Login/>} />
       
       <Route path='/:username' element={
         <>
