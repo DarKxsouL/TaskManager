@@ -75,6 +75,8 @@ export const api = {
 
   deleteDesignation: (designation: string, role: string) => 
     api.request('/settings/designation', { method: 'DELETE', body: JSON.stringify({ designation, role }) }),
+  
+  getHistory: () => api.request('/tasks'),
 
   forgotPassword: (email: string) => 
   api.request('/auth/forgot-password', { 
@@ -88,3 +90,4 @@ resetPassword: (data: any) =>
     body: JSON.stringify(data) 
   }),
 };
+

@@ -177,3 +177,10 @@ export const useDeleteAccount = () => {
     }
   });
 };
+
+export const useHistory = () => {
+  return useQuery({
+    queryKey: ['tasks', 'history'],
+    queryFn: api.getHistory,
+  });
+};
