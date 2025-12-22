@@ -26,63 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [username, setUsername] = useState("Guest");
   const [loading, setLoading] = useState(true);
 
-  // 2. CREATED REUSABLE FETCH FUNCTION (Moved logic out of useEffect)
-  // const fetchMongoData = useCallback(async (currentUser: FirebaseUser) => {
-  //     if (!currentUser.email) {
-  //         setDbUser(null);
-  //         return;
-  //     }
-
-  //     // 3. FIX: FORCE LOWERCASE EMAIL
-  //     // This prevents "Admin" vs "admin" mismatches
-  //     const normalizedEmail = currentUser.email.toLowerCase();
-
-  //     try {
-  //         console.log("🔍 Fetching MongoDB data for:", normalizedEmail);
-  //         const mongoData = await api.getUserByEmail(normalizedEmail);
-  //         console.log("✅ MongoDB User Found:", mongoData);
-  //         setDbUser(mongoData);
-  //     } catch (error) {
-  //         console.warn("❌ User not found in MongoDB yet (waiting for creation...)", error);
-  //         setDbUser(null);
-  //     }
-  // }, []);
-
-  // 4. EXPOSED REFRESH FUNCTION
-  // Call this from Login.tsx after creating the user in DB
-  // const refreshUserData = async (currentUser?: FirebaseUser) => {
-  //     // Use the passed user OR the state user
-  //     const targetUser = currentUser || user;
-      
-  //     if (targetUser) {
-  //         console.log("🔄 Manually refreshing data for:", targetUser.email);
-  //         await fetchMongoData(targetUser);
-  //     } else {
-  //         console.warn("⚠️ Cannot refresh: No user available");
-  //     }
-  // };
-
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-  //     setUser(currentUser);
-      
-  //     if (currentUser?.email) {
-  //       const displayName = currentUser.displayName || currentUser.email.split('@')[0];
-  //       setUsername(displayName);
-        
-  //       // Call the reusable function
-  //       await fetchMongoData(currentUser);
-  //     } else {
-  //       setUsername("Guest");
-  //       setDbUser(null);
-  //     }
-  //     setLoading(false);
-  //   });
-  //   return () => unsubscribe();
-  // }, [fetchMongoData]); // Added dependency
-
-  // const isAdmin = dbUser?.role === 'Admin' || dbUser?.role === 'CEO';
-
   useEffect(() => {
     const checkUserLoggedIn = async () => {
       try {
@@ -100,22 +43,60 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   // 2. Login Action
+  // const login = async (credentials: any) => {
+  //   const userData = await api.login(credentials);
+  //   setUser(userData);
+  //   setUsername(userData.name);
+  // };
   const login = async (credentials: any) => {
-    const userData = await api.login(credentials);
+    // response likely looks like: { token: "...", user: { ... } } or just { ...user } if token is missing
+    const response = await api.login(credentials);
+    
+    // Check if the response has a token and save it
+    if (response.token) {
+        localStorage.setItem('authToken', response.token);
+    }
+    
+    // Handle user object structure (sometimes user is nested, sometimes flat)
+    const userData = response.user || response; 
+    
     setUser(userData);
     setUsername(userData.name);
   };
 
   // 3. Register Action
+  // const register = async (data: any) => {
+  //   const userData = await api.register(data);
+  //   setUser(userData);
+  //   setUsername(userData.name);
+  // };
   const register = async (data: any) => {
-    const userData = await api.register(data);
+    const response = await api.register(data);
+    
+    if (response.token) {
+        localStorage.setItem('authToken', response.token);
+    }
+
+    const userData = response.user || response;
+    
     setUser(userData);
     setUsername(userData.name);
   };
 
   // 4. Logout Action
+  // const logout = async () => {
+  //   await api.logout();
+  //   setUser(null);
+  //   setUsername("Guest");
+  // };
   const logout = async () => {
-    await api.logout();
+    try {
+        await api.logout();
+    } catch (err) {
+        console.warn("Logout API failed, clearing local state anyway");
+    }
+    // ALWAYS clear local storage and state
+    localStorage.removeItem('authToken');
     setUser(null);
     setUsername("Guest");
   };
