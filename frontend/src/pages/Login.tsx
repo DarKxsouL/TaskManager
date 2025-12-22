@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
-import { toast } from 'react-hot-toast'; // 1. Import Toast
+import { toast } from 'react-hot-toast'; 
 
 const backgroundTags = [
   { text: "Update project documentation", border: "border-dotted" },
@@ -24,15 +24,12 @@ function Login() {
   const [positions, setPositions] = useState<Array<{ top: string; left: string }>>([]);
   const navigate = useNavigate();
 
-  // --- Form State ---
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState(''); 
-  // Removed 'error' state in favor of toast
   const [loading, setLoading] = useState(false);
   const [systemRole, setSystemRole] = useState("Employee");
 
-  // --- Password Reset State ---
   const [isResetting, setIsResetting] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState('');
@@ -42,19 +39,18 @@ function Login() {
     return displayName ? displayName.replace(/\s+/g, '') : 'dashboard';
   };
 
-  // --- HANDLERS ---
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const toastId = toast.loading('Logging in...'); // Show loading toast
+    const toastId = toast.loading('Logging in...'); 
 
     try {
       await login({ email, password });
-      toast.success('Welcome back!', { id: toastId }); // Update toast to success
+      toast.success('Welcome back!', { id: toastId }); 
       navigate(`/${formatUsernameForUrl(name || 'dashboard')}`);
     } catch (err: any) {
-      toast.error(err.message || "Invalid email or password.", { id: toastId }); // Update to error
+      toast.error(err.message || "Invalid email or password.", { id: toastId }); 
     } finally {
       setLoading(false);
     }
@@ -81,7 +77,6 @@ function Login() {
     }
   };
 
-  // 1. Request OTP (Step 1)
   const handlePasswordResetRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -104,7 +99,6 @@ function Login() {
     }
   };
 
-  // 2. Verify OTP & Set New Password (Step 2)
   const handleFinalReset = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -120,7 +114,6 @@ function Login() {
       await api.resetPassword({ email, otp, newPassword });
       toast.success("Password reset successful! Please login.", { id: toastId });
       
-      // Reset State to Login View
       setIsResetting(false);
       setOtpSent(false);
       setOtp('');
@@ -132,7 +125,6 @@ function Login() {
     }
   }
 
-  // --- ANIMATION LOGIC (UNCHANGED) ---
   const availableSlots = useMemo(() => {
     const slots = [];
     const rows = 6;
@@ -180,7 +172,6 @@ function Login() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-black/80 relative overflow-hidden">
-        {/* Background Animation */}
         {backgroundTags.map((tag, index) => (
           <div
             key={index}
@@ -195,25 +186,19 @@ function Login() {
           </div>
         ))}
         
-        {/* Perspective Container */}
         <div className="w-96 h-[600px] [perspective:1000px] z-10">
           
-          {/* Inner Card */}
           <div 
             className={`relative w-full h-full transition-all duration-700 [transform-style:preserve-3d] ${isFlipped ? '[transform:rotateY(180deg)]' : ''}`}
           >
 
-            {/* --- FRONT FACE (LOGIN OR RESET PASSWORD) --- */}
             <div className="absolute inset-0 w-full h-full flex flex-col justify-center items-center bg-white p-8 rounded-lg shadow-white/30 shadow-xl [backface-visibility:hidden]">
               
-              {/* Conditional Rendering: Check if user is Resetting Password */}
               {isResetting ? (
                 <>
                   <h2 className="text-2xl font-bold mb-4 text-center">Reset Password</h2>
-                  {/* Removed Inline Errors/Messages here - Toasts handle them now */}
 
                   {!otpSent ? (
-                    // --- STEP 1: ENTER EMAIL ---
                     <form onSubmit={handlePasswordResetRequest} className="space-y-4 w-full">
                       <p className="text-gray-600 text-sm text-center">Enter your email to receive a One-Time Password (OTP).</p>
                       <div>
@@ -232,7 +217,6 @@ function Login() {
                       </button>
                     </form>
                   ) : (
-                    // --- STEP 2: ENTER OTP & NEW PASSWORD ---
                     <form onSubmit={handleFinalReset} className="space-y-4 w-full">
                       <p className="text-gray-600 text-xs text-center">Enter the code sent to <b>{email}</b></p>
                       <div>
@@ -264,7 +248,6 @@ function Login() {
                     </form>
                   )}
 
-                  {/* Back to Login Button */}
                   <div className="flex justify-center mt-6">
                     <button 
                       type="button" 
@@ -276,10 +259,8 @@ function Login() {
                   </div>
                 </>
               ) : (
-                // --- STANDARD LOGIN VIEW ---
                 <>
                   <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-                  {/* Removed Inline Errors - Toasts handle them now */}
                   
                   <div className="w-full mb-4">
                       <label className="block text-gray-700 text-sm font-bold mb-1">Login As</label>
@@ -303,7 +284,6 @@ function Login() {
                       <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-3 py-2 border rounded-lg" placeholder="Enter your password" />
                     </div>
                     
-                    {/* Forgot Password Link */}
                     <div className="flex gap-x-2 justify-end text-sm">
                       <span>Forgot Password?</span>
                       <button 
@@ -330,10 +310,8 @@ function Login() {
               )}
             </div>
 
-            {/* --- BACK FACE (SIGN UP) --- */}
             <div className="absolute inset-0 w-full h-full flex flex-col justify-center items-center bg-white p-8 rounded-lg shadow-lg [backface-visibility:hidden] [transform:rotateY(180deg)]">
               <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
-              {/* Removed Inline Errors - Toasts handle them now */}
               <div className="w-full mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-1">Role</label>
                   <select 
