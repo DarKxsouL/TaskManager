@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     console.log("Is there a token?", response.token ? "YES" : "NO");
     console.groupEnd();
 
-    const token = response.token || response.accessToken || response.jwt;
+    const token = response.token;
     
     // Check if the response has a token and save it
     if (token) {

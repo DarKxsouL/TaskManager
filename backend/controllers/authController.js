@@ -61,10 +61,13 @@ exports.register = async (req, res) => {
     res.cookie('token', token, getCookieOptions());
 
     res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
+      token, // <--- Send token here too
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
 
   } catch (error) {
@@ -89,10 +92,13 @@ exports.login = async (req, res) => {
     res.cookie('token', token, getCookieOptions());
 
     res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
 
   } catch (error) {
