@@ -22,9 +22,9 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const useAssignedTasks = (username: string) => {
   return useQuery({
-    queryKey: ['assignedTasks', username], // Add username to key so it refetches on change
+    queryKey: ['assignedTasks', username],
     queryFn: () => api.getAssignedTasks(username),
-    enabled: !!username // Only run if username exists
+    enabled: !!username
   });
 };
 
