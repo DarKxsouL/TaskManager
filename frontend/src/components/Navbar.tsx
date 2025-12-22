@@ -42,7 +42,7 @@ function Navbar() {
     const handleLogout = async () => {
         try {
             await logout(); // 3. Use context logout
-            navigate('/login');
+            navigate('/');
         } catch (error) {
             console.error("Error signing out: ", error);
         }

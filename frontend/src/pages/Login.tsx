@@ -19,7 +19,7 @@ const backgroundTags = [
 ];
 
 function Login() {
-  const { login, register } = useAuth();
+  const { login, register, user } = useAuth();
   const [isFlipped, setIsFlipped] = useState(false);
   const [positions, setPositions] = useState<Array<{ top: string; left: string }>>([]);
   const navigate = useNavigate();
@@ -35,10 +35,17 @@ function Login() {
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
+
   const formatUsernameForUrl = (displayName: string | null) => {
     return displayName ? displayName.replace(/\s+/g, '') : 'dashboard';
   };
 
+  useEffect(() => {
+    if (user) {
+      const urlName = formatUsernameForUrl(user.name);
+      navigate(`/${urlName}`);
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +55,6 @@ function Login() {
     try {
       await login({ email, password });
       toast.success('Welcome back!', { id: toastId }); 
-      navigate(`/${formatUsernameForUrl(name || 'dashboard')}`);
     } catch (err: any) {
       toast.error(err.message || "Invalid email or password.", { id: toastId }); 
     } finally {
@@ -69,7 +75,6 @@ function Login() {
         systemRole: systemRole
       });
       toast.success('Account created successfully!', { id: toastId });
-      navigate(`/${formatUsernameForUrl(name)}`);
     } catch (err: any) {
       toast.error(err.message || "Registration failed", { id: toastId });
     } finally {
