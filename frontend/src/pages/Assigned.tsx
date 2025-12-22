@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useAssignedTasks } from "../hooks/useData"; 
 import { useAuth } from "../context/AuthContext";
 import Skeleton from "react-loading-skeleton";
@@ -12,7 +12,24 @@ function Assigned() {
 
   const username = user?.name || "";
   
-  const { data: assigntasks = [], isLoading, isError } = useAssignedTasks(username);
+  const { data: assigntasks = [], isLoading, isError, error } = useAssignedTasks(username);
+
+  useEffect(() => {
+    console.group("🔍 Debug: Assigned Page");
+    console.log("1. Auth User Object:", user);
+    console.log("2. Derived Username:", username ? `'${username}'` : "(Empty String)");
+
+    if (isLoading) {
+        console.log("3. Status: ⏳ Loading...");
+    } else if (isError) {
+        console.error("3. Status: ❌ Error");
+        console.error("4. Error Details:", error);
+    } else {
+        console.log("3. Status: ✅ Success");
+        console.log("4. Tasks Received:", assigntasks.length);
+    }
+    console.groupEnd();
+  }, [user, username, isLoading, isError, error, assigntasks]);
 
   // Default sort to Ascending (Earliest due date first)
   const [sortBy, setSortBy] = useState<string>('date_asc');
