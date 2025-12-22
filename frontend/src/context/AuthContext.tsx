@@ -49,12 +49,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   //   setUsername(userData.name);
   // };
   const login = async (credentials: any) => {
-    // response likely looks like: { token: "...", user: { ... } } or just { ...user } if token is missing
     const response = await api.login(credentials);
+
+    console.group("🔍 Login Debugger");
+    console.log("Raw Backend Response:", response);
+    console.log("Is there a token?", response.token ? "YES" : "NO");
+    console.groupEnd();
+
+    const token = response.token || response.accessToken || response.jwt;
     
     // Check if the response has a token and save it
-    if (response.token) {
-        localStorage.setItem('authToken', response.token);
+    if (token) {
+        localStorage.setItem('authToken', token);
+    } else {
+        console.error("⚠️ CRITICAL: No token found in login response!");
     }
     
     // Handle user object structure (sometimes user is nested, sometimes flat)
