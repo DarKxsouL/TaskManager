@@ -7,8 +7,10 @@ import { useSearch } from "../context/SearchContext";
 import TaskCard from "../components/TaskCard";
 
 function Created() {
-  const { username } = useAuth();
+  const { user } = useAuth();
   const { searchQuery } = useSearch();
+
+  const username = user?.name || "";
   
   const { data: createdTasks = [], isLoading, isError } = useCreatedTasks(username);
 

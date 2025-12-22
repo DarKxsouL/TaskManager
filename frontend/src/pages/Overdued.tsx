@@ -6,7 +6,9 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function Overdued() {
-  const { username } = useAuth();
+  const { user } = useAuth();
+
+  const username = user?.name || "";
 
   // 1. Fetch both data sources
   const { data: assignedTasks = [], isLoading: loadingAssigned } = useAssignedTasks(username);
