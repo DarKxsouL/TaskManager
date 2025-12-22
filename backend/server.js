@@ -10,6 +10,7 @@ const settingsRoutes = require('./routes/settings');
 const authRoutes = require('./routes/auth');
 
 const app = express();
+app.set('trust proxy', 1);
 const server = http.createServer(app);
 
 const CLIENT_URL = process.env.CLIENT_URL
