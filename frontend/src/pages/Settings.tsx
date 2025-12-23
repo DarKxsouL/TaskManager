@@ -328,15 +328,6 @@ function Settings() {
       <div>
         <h2 className="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">User Directory</h2>
         
-        {/* {isAdmin && (
-        <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 mb-6">
-            <form onSubmit={handleAddUser} className="flex gap-4">
-                <input type="text" placeholder="Name" value={newUserName} onChange={e => setNewUserName(e.target.value)} className="border p-2 rounded flex-1 outline-none" required />
-                <input type="email" placeholder="Email" value={newUserEmail} onChange={e => setNewUserEmail(e.target.value)} className="border p-2 rounded flex-1 outline-none" required />
-                <button className="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700">Add</button>
-            </form>
-        </div>
-        )} */}
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-visible">
             <table className="w-full text-left">
@@ -379,7 +370,7 @@ function Settings() {
                                 ) : (
                                     <CellDropdown 
                                         value={u.jobRole || ""}
-                                        options={settings?.roles || []}
+                                        options={(settings?.roles || []).filter((r: string) => r !== 'CEO')}
                                         onSelect={(val) => handleUpdateUserDetail(u._id, 'jobRole', val)}
                                         placeholder="Select Role"
                                         emptyMsg="Configure Roles"

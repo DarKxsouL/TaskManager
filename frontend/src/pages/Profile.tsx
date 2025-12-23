@@ -90,7 +90,7 @@ function Profile() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="name" className="font-semibold text-gray-700">Full Name</label>
+                    <label htmlFor="name" className="font-semibold text-gray-700">Username</label>
                     <input 
                         type="text" 
                         id="name" 
