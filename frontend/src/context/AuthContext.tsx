@@ -72,12 +72,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUsername(userData.name);
   };
 
-  // 3. Register Action
-  // const register = async (data: any) => {
-  //   const userData = await api.register(data);
-  //   setUser(userData);
-  //   setUsername(userData.name);
-  // };
   const register = async (data: any) => {
     const response = await api.register(data);
     

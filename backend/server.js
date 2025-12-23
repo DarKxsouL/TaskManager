@@ -13,7 +13,8 @@ const app = express();
 app.set('trust proxy', 1);
 const server = http.createServer(app);
 
-const CLIENT_URL = process.env.CLIENT_URL
+// const CLIENT_URL = process.env.CLIENT_URL
+ const CLIENT_URL = (process.env.CLIENT_URL || "").split(",");
 
 //Initialize Socket.io
 const io = new Server(server, {
