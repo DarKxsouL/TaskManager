@@ -236,7 +236,8 @@ function Settings() {
       if (!settings?.designations || !roleName) return [];
       return settings.designations
         .filter((d: any) => typeof d === 'object' ? d.role === roleName : true) 
-        .map((d: any) => typeof d === 'object' ? d.name : d);
+        .map((d: any) => typeof d === 'object' ? d.name : d)
+        .filter((name: string) => name !== 'CEO');
   };
 
   return (
