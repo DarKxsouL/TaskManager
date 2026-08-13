@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const SettingsSchema = new mongoose.Schema({
   // We use a fixed ID or single document pattern for global settings
-  identifier: { type: String, default: 'global_settings', unique: true },
+  // identifier: { type: String, default: 'global_settings', unique: true },
+  roomId: { type: String, required: true, unique: true },
   roles: [{ type: String }],
   designations: [{ 
     name: String, 
