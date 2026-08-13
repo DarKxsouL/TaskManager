@@ -109,9 +109,10 @@ interface Task {
   _id: string | number;
   title?: string;
   description?: string;
-  createdBy?: string;
+  createdBy?: { name: string };
   date?: string;
   time?: string;
+  createdAt?: string;
 }
 
 function History() {

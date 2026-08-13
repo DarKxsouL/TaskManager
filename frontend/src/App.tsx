@@ -35,7 +35,7 @@ const RequireApprovedRoom = ({ children }: { children: React.ReactNode }) => {
 
 function App() {
 
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   return (
     <>

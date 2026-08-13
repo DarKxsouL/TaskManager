@@ -679,7 +679,11 @@ function Network() {
   }, [groupedUsers, settings]);
 
   const totalPeople = useMemo(
-    () => Object.values(groupedUsers).reduce((sum, arr) => sum + arr.length, 0),
+    () =>
+      (Object.values(groupedUsers) as User[][]).reduce(
+        (sum: number, arr: User[]) => sum + arr.length,
+        0,
+      ),
     [groupedUsers],
   );
 
