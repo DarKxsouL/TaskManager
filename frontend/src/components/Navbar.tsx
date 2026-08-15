@@ -266,7 +266,7 @@ import { IoMdSearch, IoIosArrowDown, IoMdNotificationsOutline } from "react-icon
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; 
 import { useSearch } from "../context/SearchContext";
-import { useNotifications } from "../hooks/useData";
+import { useNotifications, useCanViewHierarchy } from "../hooks/useData";
 import NotificationSidebar from "./NotificationSidebar";
  
 function Navbar() {
@@ -284,6 +284,8 @@ function Navbar() {
     // SocketManager's 'notification' listener plus a 60s poll fallback.
     const { data: notificationData } = useNotifications();
     const unreadCount = notificationData?.unreadCount ?? 0;
+
+    const canViewHierarchy = useCanViewHierarchy();
  
     // --- Derived State (No need for useEffect for this) ---
     const username = user?.name || "User";
@@ -389,6 +391,9 @@ function Navbar() {
                             <NavLink onClick={() => setProfileMenuOpen(false)} to={userPath} end   className={({ isActive }) => `text-left text-lg font-semibold border-b border-slate-700 px-6 py-3  ${isActive ? 'text-blue-400 bg-white/10': 'hover:bg-white/10'}`}>Dashboard</NavLink>
                             <NavLink onClick={() => setProfileMenuOpen(false)} to={`${userPath}/profile`}  className={({ isActive }) => `text-left text-lg font-semibold border-b border-slate-700 px-6 py-3  ${isActive ? 'text-blue-400 bg-white/10': 'hover:bg-white/10'}`}>Profile</NavLink>
                             <NavLink onClick={() => setProfileMenuOpen(false)} to={`${userPath}/network`}  className={({ isActive }) => `text-left text-lg font-semibold border-b border-slate-700 px-6 py-3  ${isActive ? 'text-blue-400 bg-white/10': 'hover:bg-white/10'}`}>Network</NavLink>
+                            {canViewHierarchy && (
+                                <NavLink onClick={() => setProfileMenuOpen(false)} to={`${userPath}/hierarchy`}  className={({ isActive }) => `text-left text-lg font-semibold border-b border-slate-700 px-6 py-3  ${isActive ? 'text-blue-400 bg-white/10': 'hover:bg-white/10'}`}>Hierarchy</NavLink>
+                            )}
                             <NavLink onClick={() => setProfileMenuOpen(false)} to={`${userPath}/settings`} className={({ isActive }) => `text-left text-lg font-semibold border-b border-slate-700 px-6 py-3  ${isActive ? 'text-blue-400 bg-white/10': 'hover:bg-white/10'}`}>Settings</NavLink>
                             
                             <button onClick={handleLogout} className="w-full text-left text-lg font-semibold text-rose-400 px-6 py-3 hover:bg-white/10 transition-colors">Logout</button>

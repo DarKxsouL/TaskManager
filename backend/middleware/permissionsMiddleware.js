@@ -7,7 +7,9 @@ const PERMISSIONS = [
   'ASSIGN_ROLES',
   'DELETE_ANY_TASK',
   'UPDATE_ANY_TASK',
-  'VIEW_ALL_STATS'
+  'VIEW_ALL_STATS',
+  'VIEW_HIERARCHY',
+  'EDIT_HIERARCHY',
 ];
 
 // hasPermission(key) returns an Express middleware function

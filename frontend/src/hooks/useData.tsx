@@ -293,7 +293,7 @@
 //   });
 // };
 
-// src/hooks/useData.js
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../services/api'
 import { useAuth } from '../context/AuthContext';
@@ -627,6 +627,83 @@ export const useMarkAllNotificationsRead = () => {
     mutationFn: () => api.markAllNotificationsRead(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    },
+  });
+};
+
+// --- HIERARCHY (ORG CHART) ---
+ 
+export interface HierarchyNodeData {
+  _id: string;
+  name: string;
+  role: string;
+  designation: string;
+  hierarchyParent: string | null;
+  hierarchyPosition: { x: number | null; y: number | null };
+}
+ 
+// 'read' access is VIEW_HIERARCHY OR EDIT_HIERARCHY (edit implies read) OR
+// Admin/CEO, who bypass every permission check. Mirrors requireHierarchyView
+// on the backend — see middleware/hierarchyAccess.js.
+export const useCanViewHierarchy = () => {
+  const { isAdmin, hasPermission } = useAuth();
+  return isAdmin || hasPermission('VIEW_HIERARCHY') || hasPermission('EDIT_HIERARCHY');
+};
+ 
+export const useCanEditHierarchy = () => {
+  const { isAdmin, hasPermission } = useAuth();
+  return isAdmin || hasPermission('EDIT_HIERARCHY');
+};
+ 
+export const useHierarchy = () => {
+  const { user } = useAuth();
+  const canView = useCanViewHierarchy();
+ 
+  return useQuery<HierarchyNodeData[]>({
+    queryKey: ['hierarchy'],
+    queryFn: api.getHierarchy,
+    enabled: !!user && user.roomStatus === 'approved' && canView,
+  });
+};
+ 
+export const useUpdateHierarchyPosition = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ userId, x, y }: { userId: string; x: number; y: number }) =>
+      api.updateHierarchyPosition(userId, x, y),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hierarchy'] });
+    },
+  });
+};
+ 
+export const useCreateHierarchyConnection = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ parentId, childId }: { parentId: string; childId: string }) =>
+      api.createHierarchyConnection(parentId, childId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hierarchy'] });
+    },
+  });
+};
+ 
+export const useDetachHierarchyConnection = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (childId: string) => api.detachHierarchyConnection(childId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hierarchy'] });
+    },
+  });
+};
+ 
+export const useDeleteHierarchyConnection = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (childId: string) => api.deleteHierarchyConnection(childId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['hierarchy'] });
     },
   });
 };

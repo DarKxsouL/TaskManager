@@ -18,6 +18,7 @@ const Profile =  lazy(() => import('./pages/Profile'))
 const Network =  lazy(() => import('./pages/Network'))
 const History =  lazy(() => import('./pages/History'))
 const Settings =  lazy(() => import('./pages/Settings'))
+const Hierarchy = lazy(() => import('./pages/Hierarchy'))
 
 const RequireApprovedRoom = ({ children }: { children: React.ReactNode }) => {
   const { user, loading, roomStatus } = useAuth();
@@ -103,6 +104,7 @@ function App() {
         <Route path='profile' element={<Profile/>} />
         <Route path='network' element={<Network/>} />
         <Route path='history' element={<History/>} />
+        <Route path='hierarchy' element={<Hierarchy/>} />
         <Route path='settings' element={<Settings/>} />
         
         </Route>

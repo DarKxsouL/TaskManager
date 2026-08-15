@@ -89,6 +89,7 @@ const settingsRoutes = require('./routes/settings');
 const roomRoutes = require('./routes/rooms');
 const notificationRoutes = require('./routes/notifications');
 
+const hierarchyRoutes = require('./routes/hierarchy');
 const authRoutes = require('./routes/auth');
 
 const { socketAuth } = require('./utils/socketAuth');
@@ -168,6 +169,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/hierarchy', hierarchyRoutes);
 
 const PORT = process.env.PORT || 5000;
 

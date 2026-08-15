@@ -300,4 +300,26 @@ resetPassword: (data: any) =>
 
   markAllNotificationsRead: () =>
     api.request('/notifications/read-all', { method: 'PATCH' }),
+
+  // HIERARCHY (ORG CHART) ENDPOINTS
+  getHierarchy: () =>
+    api.request('/hierarchy'),
+ 
+  updateHierarchyPosition: (userId: string, x: number, y: number) =>
+    api.request(`/hierarchy/${userId}/position`, {
+      method: 'PATCH',
+      body: JSON.stringify({ x, y }),
+    }),
+ 
+  createHierarchyConnection: (parentId: string, childId: string) =>
+    api.request('/hierarchy/connections', {
+      method: 'POST',
+      body: JSON.stringify({ parentId, childId }),
+    }),
+ 
+  detachHierarchyConnection: (childId: string) =>
+    api.request(`/hierarchy/connections/${childId}/detach`, { method: 'PATCH' }),
+ 
+  deleteHierarchyConnection: (childId: string) =>
+    api.request(`/hierarchy/connections/${childId}`, { method: 'DELETE' }),
 };

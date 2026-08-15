@@ -256,7 +256,10 @@ const { notifyUser, notifyUsers } = require('../utils/notifications');
 // Small helper — every admin/CEO currently approved in a room. Used any time
 // we need to notify "the admins" rather than one specific person.
 const getRoomAdmins = (roomId) =>
-  User.find({ roomId, roomStatus: 'approved', role: { $in: ['Admin', 'CEO'] } }).select('_id');
+  User.find({ 
+    roomId, roomStatus: 'approved', 
+    role: { $in: ['Admin', 'CEO'] } 
+  }).select('_id');
 
 // --- GET MY ROOM INFO ---
 // Used by admin to see their room details (roomId to share, room name)
@@ -277,7 +280,8 @@ exports.requestJoin = async (req, res) => {
   try {
     const { roomId } = req.body;
 
-    if (!roomId) return res.status(400).json({ message: 'Room ID is required' });
+    if (!roomId) 
+      return res.status(400).json({ message: 'Room ID is required' });
 
     // 1. Check user isn't already in a room
     if (req.user.roomStatus === 'approved') {
@@ -482,12 +486,19 @@ exports.removeMember = async (req, res) => {
 
     await User.findByIdAndUpdate(userId, {
       roomId: null,
-      roomStatus: 'none'
+      roomStatus: 'none',
+      hierarchyParent: null,
     });
+
+    await User.updateMany(
+      { roomId: roomIdAtRemoval, hierarchyParent: userId },
+      { hierarchyParent: null }
+    );
 
     req.io.emit(`room-removed-${userId}`, {
       message: 'You have been removed from the room.'
     });
+    req.io.to(`room-${roomIdAtRemoval}`).emit('hierarchy-updated');
 
     await notifyUser(req.io, {
       recipient: userId,

@@ -756,7 +756,7 @@ function Profile() {
                 {formData.name?.charAt(0)?.toUpperCase() || "U"}
               </div>
               <div className="pb-1">
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-800">
                   {formData.name || "Your Profile"}
                 </h1>
                 <p className="text-sm text-slate-500">{formData.email}</p>

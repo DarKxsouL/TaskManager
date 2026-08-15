@@ -261,6 +261,16 @@ router.delete('/:id', protect, async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found in your room' });
 
     await User.findByIdAndDelete(req.params.id);
+
+    // Same hierarchy cleanup as removeMember — direct children become
+    // independent rather than pointing at a deleted user.
+    await User.updateMany(
+      { roomId: req.user.roomId, hierarchyParent: req.params.id },
+      { hierarchyParent: null }
+    );
+    req.io.to(`room-${req.user.roomId}`).emit('hierarchy-updated');
+
+
     res.json({ message: 'User deleted' });
   } catch (err) {
     res.status(500).json({ message: err.message });
